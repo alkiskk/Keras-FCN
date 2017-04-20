@@ -55,7 +55,7 @@ git clone git@github.com:ahundt/tf-image-segmentation.git -b Keras-FCN
 
 ### Pascal VOC + Berkeley Data Augmentation
 
-[Pascal VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/) augmented with [Berkeley Semantic Contours](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/) is the primary dataset used for training Keras-FCN. Note that the default configuration maximizes the size of the dataset, and will not in a form that can be submitted to the pascal [VOC2012 segmentation results leader board](http://host.robots.ox.ac.uk:8080/leaderboard/displaylb.php?challengeid=11&compid=6), details are below.
+[Pascal VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/) augmented with [Berkeley Semantic Boundary Dataset](http://home.bharathh.info/pubs/codes/SBD/download.html) is the primary dataset used for training Keras-FCN. Note that the default configuration maximizes the size of the dataset, and will not in a form that can be submitted to the pascal [VOC2012 segmentation results leader board](http://host.robots.ox.ac.uk:8080/leaderboard/displaylb.php?challengeid=11&compid=6), details are below.
 
 
 ```
