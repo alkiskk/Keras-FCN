@@ -173,9 +173,8 @@ if __name__ == '__main__':
         weight_decay = 0.0001/2
     else:
         weight_decay = 1e-4
-    classes = 21
     target_size = (320, 320)
-    dataset = 'VOC2012_BERKELEY'
+    dataset = 'kwire'
     if dataset == 'VOC2012_BERKELEY':
         # pascal voc + berkeley semantic contours annotations
         train_file_path = os.path.expanduser('~/.keras/datasets/VOC2012/combined_imageset_train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
@@ -183,6 +182,7 @@ if __name__ == '__main__':
         val_file_path   = os.path.expanduser('~/.keras/datasets/VOC2012/combined_imageset_val.txt')
         data_dir        = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/JPEGImages')
         label_dir       = os.path.expanduser('~/.keras/datasets/VOC2012/combined_annotations')
+        classes = 21
     if dataset == 'COCO':
         # ###################### loss function & metric ########################
         train_file_path = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/ImageSets/Segmentation/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
@@ -196,10 +196,17 @@ if __name__ == '__main__':
         label_suffix = '.npy'
         ignore_label = None
         label_cval = 0
-
+    if dataset == 'kwire'
+        train_file_path = os.path.expanduser('~/datasets/kwire/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
+        # train_file_path = os.path.expanduser('~/.keras/datasets/oneimage/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
+        val_file_path   = os.path.expanduser('~/datasets/kwire/val.txt')
+        data_dir        = os.path.expanduser('~/datasets/kwire/lvl3/composed')
+        label_dir       = os.path.expanduser('~/datasets/kwire/lvl3/composed_mask')
+        classes = 2
 
     # ###################### loss function & metric ########################
-    if dataset == 'VOC2012' or dataset == 'VOC2012_BERKELEY':
+    if (dataset == 'VOC2012' or dataset == 'VOC2012_BERKELEY'
+        or dataset == 'kwire'):
         loss_fn = softmax_sparse_crossentropy_ignoring_last_label
         metrics = [sparse_accuracy_ignoring_last_label]
         loss_shape = None
