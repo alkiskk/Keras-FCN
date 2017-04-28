@@ -212,10 +212,12 @@ if __name__ == '__main__':
         label_suffix='.png'
         loss_fn = binary_crossentropy_with_logits
         metrics = [binary_accuracy]
+        ignore_label = None
+        # padding should be given value 0, not kwire
+        label_cval = 0
 
     # ###################### loss function & metric ########################
-    if (dataset == 'VOC2012' or dataset == 'VOC2012_BERKELEY'
-        or dataset == 'kwire'):
+    if (dataset == 'VOC2012' or dataset == 'VOC2012_BERKELEY'):
         loss_fn = softmax_sparse_crossentropy_ignoring_last_label
         metrics = [sparse_accuracy_ignoring_last_label]
         loss_shape = None
