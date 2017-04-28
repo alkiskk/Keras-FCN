@@ -206,7 +206,8 @@ if __name__ == '__main__':
         val_file_path   = os.path.expanduser('~/datasets/kwire/val.txt')
         data_dir        = os.path.expanduser('~/datasets/kwire/lvl3/composed')
         label_dir       = os.path.expanduser('~/datasets/kwire/lvl3/composed_mask')
-        classes = 2
+        classes = 1
+        loss_shape = (target_size[0] * target_size[1] * classes,)
         data_suffix='.png'
         label_suffix='.png'
         loss_fn = binary_crossentropy_with_logits
