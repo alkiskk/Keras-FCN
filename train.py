@@ -196,7 +196,7 @@ if __name__ == '__main__':
         label_suffix = '.npy'
         ignore_label = None
         label_cval = 0
-    if dataset == 'kwire'
+    if dataset == 'kwire':
         train_file_path = os.path.expanduser('~/datasets/kwire/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
         # train_file_path = os.path.expanduser('~/.keras/datasets/oneimage/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
         val_file_path   = os.path.expanduser('~/datasets/kwire/val.txt')
