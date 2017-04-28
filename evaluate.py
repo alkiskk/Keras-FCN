@@ -50,7 +50,9 @@ def calculate_iou(model_name, nb_classes, res_dir, label_dir, image_list):
     return conf_m, IOU, meanIOU
 
 
-def evaluate(model_name, weight_file, image_size, nb_classes, batch_size, val_file_path, data_dir, label_dir):
+def evaluate(model_name, weight_file, image_size, nb_classes, batch_size, val_file_path, data_dir, label_dir,
+          label_suffix='.png',
+          data_suffix='.jpg'):
     current_dir = os.path.dirname(os.path.realpath(__file__))
     save_dir = os.path.join(current_dir, 'Models/'+model_name+'/res/')
     if os.path.exists(save_dir) == False:
@@ -60,7 +62,8 @@ def evaluate(model_name, weight_file, image_size, nb_classes, batch_size, val_fi
     fp.close()
 
     start_time = time.time()
-    inference(model_name, weight_file, image_size, image_list, data_dir, label_dir, return_results=False, save_dir=save_dir)
+    inference(model_name, weight_file, image_size, image_list, data_dir, label_dir, return_results=False, save_dir=save_dir,
+              label_suffix=label_suffix, data_suffix=data_suffix)
     duration = time.time() - start_time
     print('{}s used to make predictions.\n'.format(duration))
 
@@ -90,12 +93,14 @@ if __name__ == '__main__':
         val_file_path   = os.path.expanduser('~/.keras/datasets/VOC2012/combined_imageset_val.txt')
         data_dir        = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/JPEGImages')
         label_dir       = os.path.expanduser('~/.keras/datasets/VOC2012/combined_annotations')
+        label_suffix = '.png'
     if dataset == 'COCO':
         train_file_path = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/ImageSets/Segmentation/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
         # train_file_path = os.path.expanduser('~/.keras/datasets/oneimage/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
         val_file_path   = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt')
         data_dir        = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/JPEGImages')
         label_dir       = os.path.expanduser('~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/SegmentationClass')
+        label_suffix = '.npy'
     if dataset == 'kwire':
         train_file_path = os.path.expanduser('~/datasets/kwire/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
         # train_file_path = os.path.expanduser('~/.keras/datasets/oneimage/train.txt') #Data/VOClarge/VOC2012/ImageSets/Segmentation
@@ -104,5 +109,8 @@ if __name__ == '__main__':
         label_dir       = os.path.expanduser('~/datasets/kwire/lvl3/composed_mask')
         nb_classes = 2
         image_size = (640, 480)
+        label_suffix = '.png'
+        data_suffix='.png'
 
-    evaluate(model_name, weight_file, image_size, nb_classes, batch_size, val_file_path, data_dir, label_dir)
+    evaluate(model_name, weight_file, image_size, nb_classes, batch_size, val_file_path, data_dir, label_dir,
+             label_suffix=label_suffix, data_suffix=data_suffix)
