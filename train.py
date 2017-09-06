@@ -24,12 +24,14 @@ def train(batch_size, epochs, lr_base, lr_power, weight_decay, classes,
           data_dir, label_dir, target_size=None, batchnorm_momentum=0.9,
           resume_training=False, class_weight=None, dataset='VOC2012',
           loss_fn = softmax_sparse_crossentropy_ignoring_last_label,
-          metrics = [sparse_accuracy_ignoring_last_label],
+          metrics = None,
           loss_shape=None,
           label_suffix='.png',
           data_suffix='.jpg',
           ignore_label=255,
           label_cval=255):
+    if metrics is None:
+        metrics = [sparse_accuracy_ignoring_last_label]
     if target_size:
         input_shape = target_size + (3,)
     else:
@@ -147,7 +149,7 @@ def train(batch_size, epochs, lr_base, lr_power, weight_decay, classes,
         steps_per_epoch=get_file_len(train_file_path),
         epochs=epochs,
         callbacks=callbacks,
-        nb_worker=4,
+        workers=4,
         # validation_data=val_datagen.flow_from_directory(
         #     file_path=val_file_path, data_dir=data_dir, data_suffix='.jpg',
         #     label_dir=label_dir, label_suffix='.png',classes=classes,
@@ -161,10 +163,10 @@ def train(batch_size, epochs, lr_base, lr_power, weight_decay, classes,
     model.save_weights(save_path+'/model.hdf5')
 
 if __name__ == '__main__':
-    model_name = 'AtrousFCN_Resnet50_16s'
+    #model_name = 'AtrousFCN_Resnet50_16s'
     #model_name = 'Atrous_DenseNet'
-    #model_name = 'DenseNet_FCN'
-    batch_size = 16
+    model_name = 'DenseNet_FCN'
+    batch_size = 1
     batchnorm_momentum = 0.95
     epochs = 250
     lr_base = 0.01 * (float(batch_size) / 16)

@@ -287,7 +287,7 @@ def Atrous_DenseNet(input_shape=None, weight_decay=1E-4,
 
 def DenseNet_FCN(input_shape=None, weight_decay=1E-4,
                  batch_momentum=0.9, batch_shape=None, classes=21,
-                 include_top=False, activation='sigmoid'):
+                 include_top=False, activation='segmentation'):
     if include_top is True:
         # TODO(ahundt) Softmax is pre-applied, so need different train, inference, evaluate.
         # TODO(ahundt) for multi-label try per class sigmoid top as follows:
