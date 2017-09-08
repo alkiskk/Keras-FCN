@@ -24,12 +24,14 @@ def train(batch_size, epochs, lr_base, lr_power, weight_decay, classes,
           data_dir, label_dir, target_size=None, batchnorm_momentum=0.9,
           resume_training=False, class_weight=None, dataset='VOC2012',
           loss_fn = softmax_sparse_crossentropy_ignoring_last_label,
-          metrics = [sparse_accuracy_ignoring_last_label],
+          metrics = None,
           loss_shape=None,
           label_suffix='.png',
           data_suffix='.jpg',
           ignore_label=255,
           label_cval=255):
+    if metrics is None:
+        metrics = [sparse_accuracy_ignoring_last_label]
     if target_size:
         input_shape = target_size + (3,)
     else:
