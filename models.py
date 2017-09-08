@@ -311,7 +311,7 @@ def DenseNet_FCN(input_shape=None, weight_decay=1E-4,
                                       default_size=32,
                                       min_size=16,
                                       data_format=K.image_data_format(),
-                                      include_top=False)
+                                      require_flatten=False)
     img_input = Input(shape=input_shape)
 
     x = densenet.__create_fcn_dense_net(classes, img_input,
