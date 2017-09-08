@@ -168,9 +168,9 @@ def train(batch_size, epochs, lr_base, lr_power, weight_decay, classes,
     model.save_weights(save_path+'/model.hdf5')
 
 if __name__ == '__main__':
-    model_name = 'AtrousFCN_Resnet50_16s'
+    #model_name = 'AtrousFCN_Resnet50_16s'
     #model_name = 'Atrous_DenseNet'
-    #model_name = 'DenseNet_FCN'
+    model_name = 'DenseNet_FCN'
     batch_size = 16
     batchnorm_momentum = 0.95
     epochs = 250
