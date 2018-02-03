@@ -90,13 +90,16 @@ def FCN_Vgg16_32s(input_shape=None, weight_decay=0., batch_momentum=0.9, batch_s
     return model
 
 
-def AtrousFCN_Vgg16_16s(input_shape=None, weight_decay=0., batch_momentum=0.9, batch_shape=None, classes=21):
+def AtrousFCN_Vgg16_16s(input_shape=None, weight_decay=0., batch_momentum=0.9, batch_shape=None,
+                        classes=21, weights_path=None, upsample=True, input_tensor=None, include_top=False):
     if batch_shape:
-        img_input = Input(batch_shape=batch_shape)
-        image_size = batch_shape[1:3]
+        img_input = Input(tensor=input_tensor, batch_shape=batch_shape)
+        if upsample:
+            image_size = batch_shape[1:3]
     else:
-        img_input = Input(shape=input_shape)
-        image_size = input_shape[0:2]
+        img_input = Input(tensor=input_tensor, shape=input_shape)
+        if upsample:
+            image_size = input_shape[0:2]
     # Block 1
     x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1', kernel_regularizer=l2(weight_decay))(img_input)
     x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2', kernel_regularizer=l2(weight_decay))(x)
@@ -124,25 +127,41 @@ def AtrousFCN_Vgg16_16s(input_shape=None, weight_decay=0., batch_momentum=0.9, b
     x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2', kernel_regularizer=l2(weight_decay))(x)
     x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3', kernel_regularizer=l2(weight_decay))(x)
 
-    # Convolutional layers transfered from fully-connected layers
-    x = Conv2D(4096, (7, 7), activation='relu', padding='same', dilation_rate=(2, 2),
-                      name='fc1', kernel_regularizer=l2(weight_decay))(x)
-    x = Dropout(0.5)(x)
-    x = Conv2D(4096, (1, 1), activation='relu', padding='same', name='fc2', kernel_regularizer=l2(weight_decay))(x)
-    x = Dropout(0.5)(x)
-    #classifying layer
-    x = Conv2D(classes, (1, 1), kernel_initializer='he_normal', activation='linear', padding='valid', strides=(1, 1), kernel_regularizer=l2(weight_decay))(x)
+    if include_top:
+        # Convolutional layers transfered from fully-connected layers
+        x = Conv2D(4096, (7, 7), activation='relu', padding='same', dilation_rate=(2, 2),
+                   name='fc1', kernel_regularizer=l2(weight_decay))(x)
+        x = Dropout(0.5)(x)
+        x = Conv2D(4096, (1, 1), activation='relu', padding='same', name='fc2', kernel_regularizer=l2(weight_decay))(x)
+        x = Dropout(0.5)(x)
+        #classifying layer
+        x = Conv2D(classes, (1, 1), kernel_initializer='he_normal', activation='linear', padding='valid', strides=(1, 1), kernel_regularizer=l2(weight_decay))(x)
 
-    x = BilinearUpSampling2D(target_size=tuple(image_size))(x)
+    if upsample:
+        x = BilinearUpSampling2D(target_size=tuple(image_size))(x)
 
     model = Model(img_input, x)
 
-    weights_path = os.path.expanduser(os.path.join('~', '.keras/models/fcn_vgg16_weights_tf_dim_ordering_tf_kernels.h5'))
-    model.load_weights(weights_path, by_name=True)
+    if weights_path is None:
+        weights_path = os.path.expanduser(os.path.join('~', '.keras/models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'))
+        if not os.path.exists(weights_path):
+            temp_weights_path = os.path.expanduser(os.path.join('~', '.keras/models/fcn_vgg16_weights_tf_dim_ordering_tf_kernels.h5'))
+            if not os.path.exists(temp_weights_path):
+                # download the model if we don't have it yet
+                temp_model = keras.applications.vgg16.VGG16(include_top=False)
+                temp_model.save_weights(weights_path)
+                del(temp_model)
+            model.load_weights(weights_path, by_name=True, reshape=True)
+            model.save_weights(weights_path)
+        else:
+            model.load_weights(weights_path)
+    else:
+        model.load_weights(weights_path)
+
     return model
 
 
-def FCN_Resnet50_32s(input_shape = None, weight_decay=0., batch_momentum=0.9, batch_shape=None, classes=21):
+def FCN_Resnet50_32s(input_shape=None, weight_decay=0., batch_momentum=0.9, batch_shape=None, classes=21):
     if batch_shape:
         img_input = Input(batch_shape=batch_shape)
         image_size = batch_shape[1:3]
@@ -187,11 +206,14 @@ def FCN_Resnet50_32s(input_shape = None, weight_decay=0., batch_momentum=0.9, ba
     return model
 
 
-def AtrousFCN_Resnet50_16s(input_shape = None, weight_decay=0., batch_momentum=0.9, batch_shape=None, classes=21):
+def AtrousFCN_Resnet50_16s(input_shape=None, weight_decay=0., batch_momentum=0.9, batch_shape=None, classes=21):
+    if input_shape is None and input_tensor is not None:
+        batch_shape = keras.backend.int_shape(input_tensor)
+
     if batch_shape:
         img_input = Input(batch_shape=batch_shape)
         image_size = batch_shape[1:3]
-    else:
+    elif input_shape is not None:
         img_input = Input(shape=input_shape)
         image_size = input_shape[0:2]
 
