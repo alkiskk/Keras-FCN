@@ -256,7 +256,7 @@ class SegDirectoryIterator(Iterator):
             x, y = self.seg_data_generator.random_transform(x, y)
             x = self.seg_data_generator.standardize(x)
 
-            if self.ignore_label:
+            if self.ignore_label or self.ignore_label == 0:
                 y[np.where(y == self.ignore_label)] = self.classes
 
             if self.loss_shape is not None:
